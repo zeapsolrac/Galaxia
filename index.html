@@ -15,17 +15,17 @@
             font-family: 'Segoe UI', sans-serif;
             user-select: none;
         }
-        #canvas-container { width: 100%; height: 100%; }
+        #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
         #ui-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; display: flex; flex-direction: column;
-            justify-content: space-between; align-items: center;
-            box-sizing: border-box; padding: 2vh 2vw; z-index: 10;
+            justify-content: flex-start; align-items: center;
+            box-sizing: border-box; padding: 3vh 2vw; z-index: 10;
         }
         .header-title { text-align: center; margin-top: 1vh; pointer-events: auto; }
         .header-title h1 {
-            color: #ffb7c5; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin: 0;
-            text-transform: uppercase; letter-spacing: 3px;
+            color: #ffb7c5; font-size: clamp(1.4rem, 3.5vw, 2.5rem); font-weight: 800; margin: 0;
+            text-transform: uppercase; letter-spacing: 2px; white-space: nowrap;
             text-shadow: 0 0 15px rgba(255, 183, 197, 0.6);
             animation: pulseGlow 3s ease-in-out infinite alternate;
         }
@@ -34,21 +34,21 @@
             100% { text-shadow: 0 0 25px rgba(255,105,180,0.9); transform: scale(1.02); }
         }
         .galaxy-label {
-            position: absolute; color: rgba(255, 255, 255, 0.85); font-size: clamp(10px, 1.2vw, 13px);
-            padding: 4px 8px; border-radius: 4px; pointer-events: none; white-space: nowrap;
+            position: absolute; color: rgba(255, 255, 255, 0.85); font-size: clamp(9px, 1.1vw, 12px);
+            padding: 3px 6px; border-radius: 4px; pointer-events: none; white-space: nowrap;
             transition: opacity 0.3s ease; text-shadow: 0 0 4px rgba(0,0,0,0.9);
             background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .galaxy-label.highlight {
-            color: #ffe6f2; font-weight: 700; background: rgba(100, 20, 50, 0.5);
-            border-color: rgba(255, 105, 180, 0.4);
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-    <div id="ui-layer"><div class="header-title"><h1>Felices dos meses 💖</h1></div></div>
+    <div id="ui-layer">
+        <div class="header-title">
+            <h1>Felices dos meses 💖</h1>
+        </div>
+    </div>
     <div id="canvas-container"></div>
     <script>
         const phrases = [
@@ -142,6 +142,12 @@
             renderer.render(scene, camera);
         }
         animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 </body>
 </html>
