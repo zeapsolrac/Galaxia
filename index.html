@@ -12,42 +12,21 @@
             height: 100vh;
             overflow: hidden;
             background-color: #010103;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             user-select: none;
         }
-        #canvas-container {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
+        #canvas-container { width: 100%; height: 100%; }
         #ui-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            padding: 2vh 2vw;
-            z-index: 10;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; display: flex; flex-direction: column;
+            justify-content: space-between; align-items: center;
+            box-sizing: border-box; padding: 2vh 2vw; z-index: 10;
         }
-        .header-title {
-            text-align: center;
-            margin-top: 1vh;
-            pointer-events: auto;
-        }
+        .header-title { text-align: center; margin-top: 1vh; pointer-events: auto; }
         .header-title h1 {
-            color: #ffb7c5;
-            font-size: clamp(1.8rem, 4vw, 3rem);
-            font-weight: 800;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-shadow: 0 0 15px rgba(255, 183, 197, 0.6), 0 0 30px rgba(255, 105, 180, 0.4);
+            color: #ffb7c5; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; margin: 0;
+            text-transform: uppercase; letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(255, 183, 197, 0.6);
             animation: pulseGlow 3s ease-in-out infinite alternate;
         }
         @keyframes pulseGlow {
@@ -55,217 +34,114 @@
             100% { text-shadow: 0 0 25px rgba(255,105,180,0.9); transform: scale(1.02); }
         }
         .galaxy-label {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.85);
-            font-size: clamp(10px, 1.2vw, 13px);
-            font-weight: 500;
-            padding: 4px 8px;
-            border-radius: 4px;
-            pointer-events: none;
-            white-space: nowrap;
-            transition: opacity 0.3s ease;
-            text-shadow: 0 0 4px rgba(0,0,0,0.9);
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute; color: rgba(255, 255, 255, 0.85); font-size: clamp(10px, 1.2vw, 13px);
+            padding: 4px 8px; border-radius: 4px; pointer-events: none; white-space: nowrap;
+            transition: opacity 0.3s ease; text-shadow: 0 0 4px rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .galaxy-label.highlight {
-            color: #ffe6f2;
-            font-weight: 700;
-            font-size: clamp(11px, 1.4vw, 15px);
-            background: rgba(100, 20, 50, 0.5);
+            color: #ffe6f2; font-weight: 700; background: rgba(100, 20, 50, 0.5);
             border-color: rgba(255, 105, 180, 0.4);
-            box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
-            z-index: 5;
         }
     </style>
-    <!-- Three.js y dependencias -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
-
-    <div id="ui-layer">
-        <div class="header-title">
-            <h1>Felices dos meses 💖</h1>
-        </div>
-    </div>
-
+    <div id="ui-layer"><div class="header-title"><h1>Felices dos meses 💖</h1></div></div>
     <div id="canvas-container"></div>
-
     <script>
         const phrases = [
-            "Felices dos meses 💖", "Te amo mi vida 🥺", "Mi universo entero 💫", "Contigo hasta el fin del cosmos 🪐",
-            "Eres mi casualidad favorita ✨", "Tu sonrisa ilumina mis días 💖", "Cada momento a tu lado es mágico 🥺",
-            "Mi lugar favorito es estar contigo 💫", "Eres arte puro 🪐", "Te amo hoy y siempre ✨",
-            "Mi persona favorita en el mundo 💖", "Iluminas todo mi espacio 🥺", "Eres mi paz y mi locura 💫",
-            "Contigo el tiempo vuela 🪐", "Gracias por existir en mi vida ✨", "Eres mi sueño hecho realidad 💖",
-            "Dueña de todo mi corazón 🥺", "Tus ojos son dos galaxias 💫", "A tu lado todo es mejor 🪐",
-            "Mi compañera de aventuras ✨", "Eres perfecta para mí 💖", "Te amo más de lo que imaginas 🥺",
-            "Mi dulce niña 💫", "Juntos por siempre en este universo 🪐", "Eres la estrella más brillante ✨",
-            "Mi razón para sonreír 💖", "Haces latir mi corazón 🥺", "Eres mi universo entero 💫",
-            "Te amo con toda el alma 🪐", "Mi gran amor ✨", "Eres única 💖", "Amo tus besos 🥺",
-            "Eres mi dulce refugio 💫", "Contigo todo tiene sentido 🪐", "Mi pedacito de cielo ✨",
-            "Eres mi mayor ilusión 💖", "Te amo infinitamente 🥺", "Mi amor bonito 💫",
-            "Eres mi sol en los días grises 🪐", "Mi alegría constante ✨", "Eres mi más grande orgullo 💖",
-            "Te amo sin medidas 🥺", "Mi dulce paz 💫", "Eres mi destino favorito 🪐",
-            "Mi tesoro más preciado ✨", "Contigo soy muy feliz 💖", "Eres mi gran fortuna 🥺",
-            "Te amo con locura 💫", "Mi amor eterno 🪐", "Eres mi más lindo pensamiento ✨",
-            "Mi dulce compañía 💖", "Eres mi refugio seguro 🥺", "Te amo por siempre 💫",
-            "Mi dulce inspiración 🪐", "Eres mi magia ✨", "Mi dulce latido 💖",
-            "Eres mi gran verdad 🥺", "Te amo mi amor 💫", "Mi dulce lucero 🪐",
-            "Eres mi todo ✨", "Mi dulce encanto 💖", "Eres mi gran fortuna 🥺",
-            "Te amo tanto 💫", "Mi dulce anhelo 🪐", "Eres mi dicha ✨",
-            "Mi dulce ilusión 💖", "Eres mi gran bendición 🥺", "Te amo con fervor 💫",
-            "Mi dulce destino 🪐", "Eres mi regalo ✨", "Mi dulce alegría 💖",
-            "Eres mi gran motor 🥺", "Te amo sin fin 💫", "Mi dulce paz 🪐",
-            "Eres mi gran refugio ✨", "Mi dulce amor 💖", "Eres mi gran fortuna 🥺",
-            "Te amo con fuerza 💫", "Mi dulce sueño 🪐", "Eres mi gran verdad ✨",
-            "Mi dulce magia 💖", "Eres mi gran dicha 🥺", "Te amo por mil 💫",
-            "Mi dulce anhelo 🪐", "Eres mi gran tesoro ✨", "Mi dulce lucero 💖",
-            "Eres mi gran bendición 🥺", "Te amo de verdad 💫", "Mi dulce destino 🪐",
-            "Eres mi gran regalo ✨", "Mi dulce ilusión 💖", "Eres mi gran motor 🥺",
-            "Te amo con pasión 💫", "Mi dulce paz 🪐", "Eres mi gran refugio ✨",
-            "Mi dulce amor 💖", "Eres mi universo 🥺", "Te amo mi princesa 💫"
+            "Felices dos meses amor 💖", "Te amo mi vida 🥺", "Eres mi princesa 💫", "Mi consentida 🪐",
+            "Mis ojitos lindos ✨", "Mi chaparrita hermosa 💖", "Eres mi mundo entero 🥺", "Te amo mi amor 💫",
+            "Mi vida linda 🪐", "Eres mi princesa consentida ✨", "Te adoro mi chaparrita 💖", "Mi amor eterno 🥺",
+            "Tus ojitos me iluminan 💫", "Eres mi vida 🪐", "Mi hermosa princesa ✨", "Mi amor 💖",
+            "Mi vida, eres perfecta 🥺", "Te amo mi consentida 💫", "Mis ojitos lindos favoritos 🪐",
+            "Mi chaparrita, te amo ✨", "Mi vida, mi todo 💖", "Eres mi amor verdadero 🥺",
+            "Mi princesa, qué suerte tenerte 💫", "Te amo mi chaparrita 🪐", "Mis ojitos lindos ✨",
+            "Mi consentida hermosa 💖", "Amor de mi vida 🥺", "Eres mi princesa 💫", "Te amo mi chaparrita 🪐",
+            "Mi vida, mi cielo ✨", "Mi amor, eres única 💖", "Tus ojitos lindos me cautivan 🥺",
+            "Mi consentida favorita 💫", "Eres mi vida 🪐", "Mi princesa hermosa ✨", "Amor 💖",
+            "Te amo mi vida 🥺", "Eres mi chaparrita especial 💫", "Mis ojitos lindos 🪐",
+            "Mi amor, te amo tanto ✨", "Eres mi consentida 💖", "Mi princesa hermosa 🥺",
+            "Te amo mi chaparrita 💫", "Mi vida eres tú 🪐", "Tus ojitos me encantan ✨",
+            "Mi amor, eres mi sol 💖", "Eres mi princesa consentida 🥺", "Te amo mi vida 💫",
+            "Mi chaparrita, mi todo 🪐", "Mis ojitos lindos ✨", "Mi amor, mi alegría 💖",
+            "Eres mi consentida 🥺", "Mi princesa hermosa 💫", "Te amo mi chaparrita 🪐",
+            "Mi vida eres tú ✨", "Mis ojitos lindos 💖", "Mi amor, qué hermosa eres 🥺",
+            "Eres mi consentida 💫", "Mi princesa, te amo 🪐", "Te amo mi chaparrita ✨",
+            "Mi vida linda 💖", "Mis ojitos lindos 🥺", "Mi amor, eres todo 💫",
+            "Eres mi consentida 🪐", "Mi princesa hermosa ✨", "Te amo mi chaparrita 💖",
+            "Mi vida, te adoro 🥺", "Mis ojitos lindos 💫", "Mi amor, mi paz 🪐",
+            "Eres mi consentida ✨", "Mi princesa, mi cielo 💖", "Te amo mi chaparrita 🥺",
+            "Mi vida, qué bella 💫", "Mis ojitos lindos 🪐", "Mi amor, eres única ✨",
+            "Eres mi consentida 💖", "Mi princesa hermosa 🥺", "Te amo mi chaparrita 💫",
+            "Mi vida linda 🪐", "Mis ojitos lindos ✨", "Mi amor, mi fortuna 💖",
+            "Eres mi consentida 🥺", "Mi princesa, mi luz 💫", "Te amo mi chaparrita 🪐",
+            "Mi vida te ama ✨", "Mis ojitos lindos 💖", "Mi amor, eres magia 🥺",
+            "Eres mi consentida 💫", "Mi princesa, te amo 🪐", "Te amo mi chaparrita ✨",
+            "Mi vida linda 💖", "Mis ojitos lindos 🥺", "Mi amor, mi todo 💫",
+            "Eres mi consentida 🪐", "Mi princesa hermosa ✨", "Te amo mi chaparrita 💖",
+            "Mi vida, te adoro 🥺", "Mis ojitos lindos 💫", "Eres mi amor 🪐"
         ];
 
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x010103, 0.002);
-
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
         camera.position.set(0, 45, 60);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.toneMapping = THREE.ACESFilmicToneMapping;
         container.appendChild(renderer.domElement);
-
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.maxDistance = 300;
-        controls.minDistance = 5;
-
-        const count = 100000;
+        
+        const count = 120000;
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
-
         const colorInside = new THREE.Color('#ff69b4');
         const colorOutside = new THREE.Color('#1e90ff');
-        const colorCore = new THREE.Color('#ffffff');
 
         for (let i = 0; i < count; i++) {
             const i3 = i * 3;
-            const radius = Math.random() * 80;
-            const spinAngle = radius * 0.5;
-            const branchAngle = ((i % 3) * Math.PI * 2) / 3;
-
-            const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 10;
-            const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 10;
-            const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 10;
-
-            positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-            positions[i3 + 1] = randomY;
-            positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
-
-            const mixedColor = colorInside.clone();
-            mixedColor.lerp(colorOutside, radius / 80);
-            if (radius < 10) mixedColor.lerp(colorCore, 1 - radius / 10);
-
-            colors[i3] = mixedColor.r;
-            colors[i3 + 1] = mixedColor.g;
-            colors[i3 + 2] = mixedColor.b;
+            const radius = Math.random() * 90;
+            const spinAngle = radius * 0.35;
+            const branchAngle = ((i % 2) * Math.PI * 2) / 2;
+            positions[i3] = Math.cos(branchAngle + spinAngle) * radius + (Math.random()-0.5)*20;
+            positions[i3+1] = (Math.random()-0.5)*5;
+            positions[i3+2] = Math.sin(branchAngle + spinAngle) * radius + (Math.random()-0.5)*20;
+            const mixedColor = colorInside.clone().lerp(colorOutside, radius / 90);
+            colors[i3] = mixedColor.r; colors[i3+1] = mixedColor.g; colors[i3+2] = mixedColor.b;
         }
-
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-        const canvasCanvas = document.createElement('canvas');
-        canvasCanvas.width = 16;
-        canvasCanvas.height = 16;
-        const ctx = canvasCanvas.getContext('2d');
-        const gradient = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
-        gradient.addColorStop(0, 'rgba(255,255,255,1)');
-        gradient.addColorStop(0.5, 'rgba(255,180,220,0.5)');
-        gradient.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, 16, 16);
-
-        const particleTexture = new THREE.CanvasTexture(canvasCanvas);
-        const material = new THREE.PointsMaterial({
-            size: 0.8,
-            sizeAttenuation: true,
-            vertexColors: true,
-            blending: THREE.AdditiveBlending,
-            transparent: true,
-            depthWrite: false,
-            map: particleTexture
-        });
-
+        const material = new THREE.PointsMaterial({ size: 0.7, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true });
         const galaxy = new THREE.Points(geometry, material);
         scene.add(galaxy);
 
         const labels = [];
         const uiLayer = document.getElementById('ui-layer');
-
-        for (let i = 0; i < phrases.length; i++) {
+        phrases.forEach(p => {
             const div = document.createElement('div');
-            div.className = 'galaxy-label' + (i < 4 ? ' highlight' : '');
-            div.textContent = phrases[i];
+            div.className = 'galaxy-label';
+            div.textContent = p;
             uiLayer.appendChild(div);
-
             const angle = Math.random() * Math.PI * 2;
-            const radius = 5 + Math.random() * 55;
-            const x = Math.cos(angle) * radius;
-            const z = Math.sin(angle) * radius;
-            const y = (Math.random() - 0.5) * 8;
-
-            labels.push({ element: div, position: new THREE.Vector3(x, y, z) });
-        }
-
-        const tempV = new THREE.Vector3();
+            const radius = 10 + Math.random() * 60;
+            labels.push({ element: div, position: new THREE.Vector3(Math.cos(angle)*radius, (Math.random()-0.5)*5, Math.sin(angle)*radius) });
+        });
 
         function animate() {
             requestAnimationFrame(animate);
-            galaxy.rotation.y += 0.0008;
-
-            const cameraDistance = camera.position.distanceTo(scene.position);
-
-            labels.forEach(label => {
-                tempV.copy(label.position);
-                tempV.applyMatrix4(galaxy.matrixWorld);
-
-                const cloneV = tempV.clone();
-                cloneV.project(camera);
-
-                if (cloneV.z > 1 || cloneV.x < -1 || cloneV.x > 1 || cloneV.y < -1 || cloneV.y > 1) {
-                    label.element.style.display = 'none';
-                    return;
-                }
-
-                label.element.style.display = 'block';
-                const x = (cloneV.x *  .5 + .5) * window.innerWidth;
-                const y = (cloneV.y * -.5 + .5) * window.innerHeight;
-
-                label.element.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
-                
-                const depthOpacity = Math.max(0.1, 1 - (tempV.distanceTo(camera.position) / 120));
-                label.element.style.opacity = Math.max(0.2, Math.min(depthOpacity, 1));
+            galaxy.rotation.y += 0.0006;
+            labels.forEach(l => {
+                const pos = l.position.clone().applyMatrix4(galaxy.matrixWorld).project(camera);
+                if (pos.z > 1) { l.element.style.display = 'none'; return; }
+                l.element.style.display = 'block';
+                l.element.style.transform = `translate(-50%, -50%) translate(${(pos.x*.5+.5)*window.innerWidth}px, ${(pos.y*-.5+.5)*window.innerHeight}px)`;
             });
-
-            controls.update();
             renderer.render(scene, camera);
         }
-
         animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
     </script>
 </body>
-</html>   
+</html>
