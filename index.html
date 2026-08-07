@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nuestra Galaxia ?? (Pantalla Completa)</title>
   <style>
@@ -40,7 +40,7 @@
       pointer-events: none; /* Deja pasar los clics al 3D */
     }
 
-    /* Estilo para las palabras s˙per legibles (borde negro) */
+    /* Estilo para las palabras s√∫per legibles (borde negro) */
     .palabra-galactica {
       position: absolute;
       font-weight: 800;
@@ -63,7 +63,7 @@
       letter-spacing: 0.5px;
     }
 
-    /* TÌtulo superior fijo */
+    /* T√≠tulo superior fijo */
     .ui-overlay {
       position: absolute;
       top: 8%;
@@ -90,22 +90,22 @@
   <div id="canvas-container"></div>
   <div id="labels-container"></div>
 
-  <!-- TÌtulo fijo superior -->
+  <!-- T√≠tulo fijo superior -->
   <div class="ui-overlay">
     <h1>NUESTRO UNIVERSO ??</h1>
   </div>
 
-  <!-- Importamos la librerÌa Three.js -->
+  <!-- Importamos la librer√≠a Three.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <script>
     const container = document.getElementById('canvas-container');
     const labelsContainer = document.getElementById('labels-container');
     
-    // --- CONFIGURACI”N B¡SICA DE THREE.JS ---
+    // --- CONFIGURACI√ìN B√ÅSICA DE THREE.JS ---
     const scene = new THREE.Scene();
     
-    // C·mara con ·ngulo de visiÛn amplio
+    // C√°mara con √°ngulo de visi√≥n amplio
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     
@@ -114,11 +114,11 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // PosiciÛn inicial agradable de la c·mara
+    // Posici√≥n inicial agradable de la c√°mara
     let targetCameraDistance = 45; 
     let currentCameraDistance = 45;
-    const minDistance = 15; // LÌmite para Zoom In
-    const maxDistance = 80; // LÌmite para Zoom Out
+    const minDistance = 15; // L√≠mite para Zoom In
+    const maxDistance = 80; // L√≠mite para Zoom Out
 
     // Grupo contenedor para toda la galaxia
     const universeGroup = new THREE.Group();
@@ -129,7 +129,7 @@
     const cGold = new THREE.Color(0xffd60a);
     const cPurple = new THREE.Color(0xbf5af2);
 
-    // --- 1. ESTRELLAS DE FONDO LEJANO (25,000 partÌculas para llenar el espacio) ---
+    // --- 1. ESTRELLAS DE FONDO LEJANO (25,000 part√≠culas para llenar el espacio) ---
     const starCount = 25000; 
     const starGeometry = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
@@ -146,7 +146,7 @@
       starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.6; // Un poco aplanado
       starPositions[i * 3 + 2] = radius * Math.cos(phi);
 
-      // Mezcla de colores aleatorios para el fondo cÛsmico
+      // Mezcla de colores aleatorios para el fondo c√≥smico
       let rand = Math.random();
       let pickedColor = cBlue.clone();
       if (rand > 0.3 && rand < 0.7) pickedColor.lerp(cPurple, Math.random());
@@ -169,19 +169,19 @@
     const starField = new THREE.Points(starGeometry, starMaterial);
     universeGroup.add(starField);
 
-    // --- 2. LA GALAXIA ESPIRAL (25,000 partÌculas ultra densas) ---
+    // --- 2. LA GALAXIA ESPIRAL (25,000 part√≠culas ultra densas) ---
     const galaxyCount = 25000;
     const galaxyGeometry = new THREE.BufferGeometry();
     const galaxyPositions = new Float32Array(galaxyCount * 3);
     const galaxyColors = new Float32Array(galaxyCount * 3);
 
     for (let i = 0; i < galaxyCount; i++) {
-      const r = Math.pow(Math.random(), 1.3) * 26; // Radio de expansiÛn
+      const r = Math.pow(Math.random(), 1.3) * 26; // Radio de expansi√≥n
       const numBrazos = 4;
       const brazoActual = i % numBrazos; 
       const anguloBrazo = (brazoActual * 2 * Math.PI) / numBrazos;
       
-      // Matem·tica para crear la espiral org·nica
+      // Matem√°tica para crear la espiral org√°nica
       const dispersion = (Math.random() - 0.5) * (6.0 / (r + 1.0));
       const theta = anguloBrazo + (r * 0.35) + dispersion;
       
@@ -189,7 +189,7 @@
       galaxyPositions[i * 3 + 1] = (Math.random() - 0.5) * 4.5 * Math.exp(-r * 0.07); 
       galaxyPositions[i * 3 + 2] = r * Math.sin(theta);
 
-      // Degradado crom·tico: N˙cleo dorado brillante -> Morado -> Azul cÛsmico
+      // Degradado crom√°tico: N√∫cleo dorado brillante -> Morado -> Azul c√≥smico
       const factor = r / 26;
       let mixColor = cGold.clone(); 
       if (factor > 0.05) mixColor.lerp(cPurple, (factor - 0.05) * 1.3);
@@ -204,7 +204,7 @@
     galaxyGeometry.setAttribute('color', new THREE.BufferAttribute(galaxyColors, 3));
     
     const galaxyMaterial = new THREE.PointsMaterial({
-      size: 0.20, // PartÌculas grandes para que brillen con fuerza
+      size: 0.20, // Part√≠culas grandes para que brillen con fuerza
       vertexColors: true,
       transparent: true,
       opacity: 0.95, 
@@ -213,21 +213,21 @@
     const galaxyMesh = new THREE.Points(galaxyGeometry, galaxyMaterial);
     universeGroup.add(galaxyMesh);
 
-    // --- 3. BANCO DE FRASES Y DISTRIBUCI”N ESPECÕFICA (115 elementos) ---
-    // Listas para crear combinaciones rom·nticas
-    const inicios = ["Eres mi", "Siempre", "Juntos por", "Mi rincÛn", "Mi pequeÒa", "Amor", "Luz de mi", "Mi mundo", "Mi felicidad", "DueÒa de mi", "Latido de mi", "Gracias por", "Te amo"];
-    const conectores = ["universo", "princesa ??", "chaparrita ??", "infinito 8", "eterno", "2 meses juntos", "todo entero", "estrella ?", "reflejo", "destino ??", "magia ??", "vida", "cielo ??", "ilusiÛn", "sonrisa ??", "corazÛn ??"];
-    const finales = ["perfecto", "favorito", "en el cosmos", "por siempre", "cada dÌa m·s", "sin final", "completo", "brillante ??", "alegrÌa", "˙nica", "hermosa", "mi suerte"];
+    // --- 3. BANCO DE FRASES Y DISTRIBUCI√ìN ESPEC√çFICA (115 elementos) ---
+    // Listas para crear combinaciones rom√°nticas
+    const inicios = ["Eres mi", "Siempre", "Juntos por", "Mi rinc√≥n", "Mi peque√±a", "Amor", "Luz de mi", "Mi mundo", "Mi felicidad", "Due√±a de mi", "Latido de mi", "Gracias por", "Te amo"];
+    const conectores = ["universo", "princesa ??", "chaparrita ??", "infinito 8", "eterno", "2 meses juntos", "todo entero", "estrella ?", "reflejo", "destino ??", "magia ??", "vida", "cielo ??", "ilusi√≥n", "sonrisa ??", "coraz√≥n ??"];
+    const finales = ["perfecto", "favorito", "en el cosmos", "por siempre", "cada d√≠a m√°s", "sin final", "completo", "brillante ??", "alegr√≠a", "√∫nica", "hermosa", "mi suerte"];
 
-    // Base de frases est·ticas principales
+    // Base de frases est√°ticas principales
     const frasesBase = [
       "TE AMO", "MI PRINCESA ??", "MI CHAPARRITA ??", "INFINITO 8", "2 MESES JUNTOS", 
       "ERES MI TODO", "NUESTRO UNIVERSO ??", "SIEMPRE JUNTOS", "MI MUNDO ??", "AMOR ETERNO",
-      "SONRISAS ??", "RECUERDOS ??", "FELICIDAD", "SUE—OS ?", "MI LUZ ??", "MAGIA ??",
-      "DESTINO ??", "CARI—O", "ILUSI”N", "PASI”N ??", "COMPLICES", "MI REFLEJO"
+      "SONRISAS ??", "RECUERDOS ??", "FELICIDAD", "SUE√ëOS ?", "MI LUZ ??", "MAGIA ??",
+      "DESTINO ??", "CARI√ëO", "ILUSI√ìN", "PASI√ìN ??", "COMPLICES", "MI REFLEJO"
     ];
 
-    // Generamos las frases ˙nicas combinando las listas
+    // Generamos las frases √∫nicas combinando las listas
     const bancoDeFrases = [...frasesBase];
     while (bancoDeFrases.length < 115) {
       const randomInicio = inicios[Math.floor(Math.random() * inicios.length)];
@@ -241,11 +241,11 @@
       }
     }
 
-    // Creamos los elementos HTML y asignamos su posiciÛn 3D dispersa
+    // Creamos los elementos HTML y asignamos su posici√≥n 3D dispersa
     const labelsData = [];
     const totalVisibles = 115; // Total exacto
     const frasesEnGalaxia = 15; // Las que quedan "dentro"
-    const frasesEnEspacio = 100; // Las que llenan los bordes y vacÌos
+    const frasesEnEspacio = 100; // Las que llenan los bordes y vac√≠os
 
     for (let i = 0; i < totalVisibles; i++) {
       const el = document.createElement('div');
@@ -264,10 +264,10 @@
         // 2. Las 100 en los espacios negros y bordes exteriores
         radius = 27 + Math.random() * 28; 
         const indexDisperso = i - frasesEnGalaxia;
-        // DistribuciÛn uniforme para que no se encimen
+        // Distribuci√≥n uniforme para que no se encimen
         theta = (indexDisperso * (Math.PI * 2 / frasesEnEspacio)) + (Math.random() - 0.5) * 0.4;
         
-        // EstratificaciÛn de altura (Y) para rellenar los vacÌos tridimensionales superiores e inferiores
+        // Estratificaci√≥n de altura (Y) para rellenar los vac√≠os tridimensionales superiores e inferiores
         const totalRows = 10;
         const currentRow = Math.floor(indexDisperso / (frasesEnEspacio / totalRows));
         yPos = ((currentRow / totalRows) * 2 - 1) * 14 + (Math.random() - 0.5) * 2;
@@ -282,7 +282,7 @@
       labelsData.push({ element: el, pos3D: pos3D });
     }
 
-    // --- 4. L”GICA DE INTERACCI”N (Swipe t·ctil y Mouse con Inercia) ---
+    // --- 4. L√ìGICA DE INTERACCI√ìN (Swipe t√°ctil y Mouse con Inercia) ---
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
     let rotationVelocityX = 0;
@@ -290,7 +290,7 @@
     const friction = 0.96; // Factor de frenado para la inercia
     let startTouchDistance = 0;
 
-    // Zoom interactivo con Rueda del RatÛn
+    // Zoom interactivo con Rueda del Rat√≥n
     window.addEventListener('wheel', (e) => {
       targetCameraDistance += e.deltaY * 0.03;
       // Limitar rango de zoom
@@ -306,7 +306,7 @@
         const dy = e.touches[0].clientY - e.touches[1].clientY;
         startTouchDistance = Math.sqrt(dx * dx + dy * dy);
       } else {
-        // RotaciÛn normal (Un dedo / mouse)
+        // Rotaci√≥n normal (Un dedo / mouse)
         isDragging = true;
         const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -315,7 +315,7 @@
     }
 
     function onPointerMove(e) {
-      // Zoom t·ctil (Pinch-to-zoom)
+      // Zoom t√°ctil (Pinch-to-zoom)
       if (e.touches && e.touches.length === 2) {
         const dx = e.touches[0].clientX - e.touches[1].clientX;
         const dy = e.touches[0].clientY - e.touches[1].clientY;
@@ -329,7 +329,7 @@
         return; // No rotar mientras se hace zoom
       }
 
-      // RotaciÛn
+      // Rotaci√≥n
       if (!isDragging) return;
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -337,7 +337,7 @@
       const deltaX = clientX - previousMousePosition.x;
       const deltaY = clientY - previousMousePosition.y;
 
-      // Calculamos velocidad de rotaciÛn seg˙n el movimiento
+      // Calculamos velocidad de rotaci√≥n seg√∫n el movimiento
       rotationVelocityY = deltaX * 0.003;
       rotationVelocityX = deltaY * 0.0015;
 
@@ -346,7 +346,7 @@
 
     function onPointerUp() { isDragging = false; }
 
-    // Event listeners para ratÛn y eventos t·ctiles
+    // Event listeners para rat√≥n y eventos t√°ctiles
     window.addEventListener('mousedown', onPointerDown);
     window.addEventListener('mousemove', onPointerMove);
     window.addEventListener('mouseup', onPointerUp);
@@ -354,23 +354,23 @@
     window.addEventListener('touchmove', onPointerMove, { passive: true });
     window.addEventListener('touchend', onPointerUp);
 
-    // --- 5. BUCLE DE ANIMACI”N PRINCIPAL (Renderizado continuo) ---
+    // --- 5. BUCLE DE ANIMACI√ìN PRINCIPAL (Renderizado continuo) ---
     function animate() {
       requestAnimationFrame(animate);
 
-      // InterpolaciÛn suave (Lerp) para que el zoom sea fluido
+      // Interpolaci√≥n suave (Lerp) para que el zoom sea fluido
       currentCameraDistance += (targetCameraDistance - currentCameraDistance) * 0.08;
       
-      // Actualizamos posiciÛn de c·mara y ·ngulo seg˙n el zoom
+      // Actualizamos posici√≥n de c√°mara y √°ngulo seg√∫n el zoom
       camera.position.set(0, currentCameraDistance * 0.70, currentCameraDistance * 1.0);
       camera.lookAt(0, -1, 0);
 
-      // Aplicamos la rotaciÛn (arrastre o rotaciÛn autom·tica)
+      // Aplicamos la rotaci√≥n (arrastre o rotaci√≥n autom√°tica)
       if (isDragging) {
         universeGroup.rotation.y += rotationVelocityY;
         universeGroup.rotation.x += rotationVelocityX;
       } else {
-        universeGroup.rotation.y += 0.0006; // RotaciÛn autom·tica base
+        universeGroup.rotation.y += 0.0006; // Rotaci√≥n autom√°tica base
         // Aplicamos inercia
         universeGroup.rotation.y += rotationVelocityY;
         universeGroup.rotation.x += rotationVelocityX;
@@ -379,33 +379,33 @@
         rotationVelocityX *= friction;
       }
 
-      // Limitamos inclinaciÛn vertical
+      // Limitamos inclinaci√≥n vertical
       universeGroup.rotation.x = Math.max(-0.4, Math.min(0.4, universeGroup.rotation.x));
 
       // Obtenemos mitad de pantalla actual para posicionamiento de etiquetas
       const widthHalf = window.innerWidth / 2;
       const heightHalf = window.innerHeight / 2;
 
-      // Actualizamos posiciÛn 2D de las palabras bas·ndonos en su posiciÛn 3D
+      // Actualizamos posici√≥n 2D de las palabras bas√°ndonos en su posici√≥n 3D
       labelsData.forEach(label => {
-        // Clonamos posiciÛn y aplicamos rotaciÛn del grupo
+        // Clonamos posici√≥n y aplicamos rotaci√≥n del grupo
         const wp = label.pos3D.clone().applyMatrix4(universeGroup.matrixWorld);
         // Proyectamos a coordenadas de pantalla (-1 a 1)
         const tempV = wp.clone().project(camera);
         
-        // Si est· fuera de la vista o detr·s de la c·mara, la ocultamos
+        // Si est√° fuera de la vista o detr√°s de la c√°mara, la ocultamos
         if (tempV.z > 1 || tempV.x < -1 || tempV.x > 1 || tempV.y < -1 || tempV.y > 1) {
           label.element.style.opacity = 0;
           return;
         }
 
-        // Convertimos coordenadas proyectadas a pÌxeles
+        // Convertimos coordenadas proyectadas a p√≠xeles
         const x = (tempV.x * widthHalf) + widthHalf;
         const y = (-(tempV.y * heightHalf) + heightHalf);
 
-        // Efecto de profundidad: m·s opaco/grande al frente, tenue/pequeÒo al fondo
+        // Efecto de profundidad: m√°s opaco/grande al frente, tenue/peque√±o al fondo
         const depthOpacity = (1.25 - tempV.z).toFixed(2);
-        // Escala inteligente que responde tanto a la posiciÛn 3D como al Zoom
+        // Escala inteligente que responde tanto a la posici√≥n 3D como al Zoom
         const scaleFactor = ((1.15 - tempV.z * 0.45) * (45 / currentCameraDistance)).toFixed(2);
 
         // Aplicamos estilos finales ultra legibles
@@ -420,9 +420,9 @@
     // Iniciamos el bucle
     animate();
 
-    // AJUSTE CLAVE: LÛgica de redimensionado de ventana autom·tica
+    // AJUSTE CLAVE: L√≥gica de redimensionado de ventana autom√°tica
     window.addEventListener('resize', () => {
-      // Actualizamos c·mara (aspect ratio) y renderer al nuevo tamaÒo
+      // Actualizamos c√°mara (aspect ratio) y renderer al nuevo tama√±o
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
