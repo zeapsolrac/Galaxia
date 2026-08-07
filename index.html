@@ -1,432 +1,271 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nuestra Galaxia ?? (Pantalla Completa)</title>
-  <style>
-    /* Estilos forzados para Pantalla Completa Total */
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden; /* Evita barras de desplazamiento */
-      background-color: #010103;
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-      user-select: none;
-      color: #fff;
-      touch-action: none;
-    }
-
-    /* Contenedor del Canvas 3D a pantalla completa */
-    #canvas-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 1;
-    }
-
-    /* Contenedor de las palabras a pantalla completa */
-    #labels-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 5;
-      pointer-events: none; /* Deja pasar los clics al 3D */
-    }
-
-    /* Estilo para las palabras súper legibles (borde negro) */
-    .palabra-galactica {
-      position: absolute;
-      font-weight: 800;
-      font-size: 13px;
-      color: #ffffff;
-      opacity: 1 !important;
-      background: transparent;
-      
-      -webkit-text-stroke: 1.2px #000000; 
-      text-stroke: 1.2px #000000;
-      
-      text-shadow: 
-        1px 1px 0 #000,
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000;
-
-      white-space: nowrap;
-      will-change: transform;
-      letter-spacing: 0.5px;
-    }
-
-    /* Título superior fijo */
-    .ui-overlay {
-      position: absolute;
-      top: 8%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
-      text-align: center;
-      width: 90%;
-      pointer-events: none;
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin: 0;
-      text-shadow: 0 0 12px #ff4d6d;
-      letter-spacing: 2px;
-      font-family: monospace;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Felices dos meses 💖</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #010103;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+        }
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 2vh 2vw;
+            z-index: 10;
+        }
+        .header-title {
+            text-align: center;
+            margin-top: 1vh;
+            pointer-events: auto;
+        }
+        .header-title h1 {
+            color: #ffb7c5;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(255, 183, 197, 0.6), 0 0 30px rgba(255, 105, 180, 0.4);
+            animation: pulseGlow 3s ease-in-out infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 10px rgba(255,183,197,0.5); transform: scale(1); }
+            100% { text-shadow: 0 0 25px rgba(255,105,180,0.9); transform: scale(1.02); }
+        }
+        .galaxy-label {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: clamp(10px, 1.2vw, 13px);
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+            text-shadow: 0 0 4px rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .galaxy-label.highlight {
+            color: #ffe6f2;
+            font-weight: 700;
+            font-size: clamp(11px, 1.4vw, 15px);
+            background: rgba(100, 20, 50, 0.5);
+            border-color: rgba(255, 105, 180, 0.4);
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
+            z-index: 5;
+        }
+    </style>
+    <!-- Three.js y dependencias -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 
-  <!-- Contenedores para el 3D y los textos -->
-  <div id="canvas-container"></div>
-  <div id="labels-container"></div>
+    <div id="ui-layer">
+        <div class="header-title">
+            <h1>Felices dos meses 💖</h1>
+        </div>
+    </div>
 
-  <!-- Título fijo superior -->
-  <div class="ui-overlay">
-    <h1>NUESTRO UNIVERSO ??</h1>
-  </div>
+    <div id="canvas-container"></div>
 
-  <!-- Importamos la librería Three.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const phrases = [
+            "Felices dos meses 💖", "Te amo mi vida 🥺", "Mi universo entero 💫", "Contigo hasta el fin del cosmos 🪐",
+            "Eres mi casualidad favorita ✨", "Tu sonrisa ilumina mis días 💖", "Cada momento a tu lado es mágico 🥺",
+            "Mi lugar favorito es estar contigo 💫", "Eres arte puro 🪐", "Te amo hoy y siempre ✨",
+            "Mi persona favorita en el mundo 💖", "Iluminas todo mi espacio 🥺", "Eres mi paz y mi locura 💫",
+            "Contigo el tiempo vuela 🪐", "Gracias por existir en mi vida ✨", "Eres mi sueño hecho realidad 💖",
+            "Dueña de todo mi corazón 🥺", "Tus ojos son dos galaxias 💫", "A tu lado todo es mejor 🪐",
+            "Mi compañera de aventuras ✨", "Eres perfecta para mí 💖", "Te amo más de lo que imaginas 🥺",
+            "Mi dulce niña 💫", "Juntos por siempre en este universo 🪐", "Eres la estrella más brillante ✨",
+            "Mi razón para sonreír 💖", "Haces latir mi corazón 🥺", "Eres mi universo entero 💫",
+            "Te amo con toda el alma 🪐", "Mi gran amor ✨", "Eres única 💖", "Amo tus besos 🥺",
+            "Eres mi dulce refugio 💫", "Contigo todo tiene sentido 🪐", "Mi pedacito de cielo ✨",
+            "Eres mi mayor ilusión 💖", "Te amo infinitamente 🥺", "Mi amor bonito 💫",
+            "Eres mi sol en los días grises 🪐", "Mi alegría constante ✨", "Eres mi más grande orgullo 💖",
+            "Te amo sin medidas 🥺", "Mi dulce paz 💫", "Eres mi destino favorito 🪐",
+            "Mi tesoro más preciado ✨", "Contigo soy muy feliz 💖", "Eres mi gran fortuna 🥺",
+            "Te amo con locura 💫", "Mi amor eterno 🪐", "Eres mi más lindo pensamiento ✨",
+            "Mi dulce compañía 💖", "Eres mi refugio seguro 🥺", "Te amo por siempre 💫",
+            "Mi dulce inspiración 🪐", "Eres mi magia ✨", "Mi dulce latido 💖",
+            "Eres mi gran verdad 🥺", "Te amo mi amor 💫", "Mi dulce lucero 🪐",
+            "Eres mi todo ✨", "Mi dulce encanto 💖", "Eres mi gran fortuna 🥺",
+            "Te amo tanto 💫", "Mi dulce anhelo 🪐", "Eres mi dicha ✨",
+            "Mi dulce ilusión 💖", "Eres mi gran bendición 🥺", "Te amo con fervor 💫",
+            "Mi dulce destino 🪐", "Eres mi regalo ✨", "Mi dulce alegría 💖",
+            "Eres mi gran motor 🥺", "Te amo sin fin 💫", "Mi dulce paz 🪐",
+            "Eres mi gran refugio ✨", "Mi dulce amor 💖", "Eres mi gran fortuna 🥺",
+            "Te amo con fuerza 💫", "Mi dulce sueño 🪐", "Eres mi gran verdad ✨",
+            "Mi dulce magia 💖", "Eres mi gran dicha 🥺", "Te amo por mil 💫",
+            "Mi dulce anhelo 🪐", "Eres mi gran tesoro ✨", "Mi dulce lucero 💖",
+            "Eres mi gran bendición 🥺", "Te amo de verdad 💫", "Mi dulce destino 🪐",
+            "Eres mi gran regalo ✨", "Mi dulce ilusión 💖", "Eres mi gran motor 🥺",
+            "Te amo con pasión 💫", "Mi dulce paz 🪐", "Eres mi gran refugio ✨",
+            "Mi dulce amor 💖", "Eres mi universo 🥺", "Te amo mi princesa 💫"
+        ];
 
-  <script>
-    const container = document.getElementById('canvas-container');
-    const labelsContainer = document.getElementById('labels-container');
-    
-    // --- CONFIGURACIÓN BÁSICA DE THREE.JS ---
-    const scene = new THREE.Scene();
-    
-    // Cámara con ángulo de visión amplio
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    
-    // AJUSTE CLAVE: Renderer y Canvas a Pantalla Completa
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x010103, 0.002);
 
-    // Posición inicial agradable de la cámara
-    let targetCameraDistance = 45; 
-    let currentCameraDistance = 45;
-    const minDistance = 15; // Límite para Zoom In
-    const maxDistance = 80; // Límite para Zoom Out
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 45, 60);
 
-    // Grupo contenedor para toda la galaxia
-    const universeGroup = new THREE.Group();
-    scene.add(universeGroup);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        container.appendChild(renderer.domElement);
 
-    // Colores base de la galaxia
-    const cBlue = new THREE.Color(0x0a84ff);
-    const cGold = new THREE.Color(0xffd60a);
-    const cPurple = new THREE.Color(0xbf5af2);
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxDistance = 300;
+        controls.minDistance = 5;
 
-    // --- 1. ESTRELLAS DE FONDO LEJANO (25,000 partículas para llenar el espacio) ---
-    const starCount = 25000; 
-    const starGeometry = new THREE.BufferGeometry();
-    const starPositions = new Float32Array(starCount * 3);
-    const starColors = new Float32Array(starCount * 3);
+        const count = 100000;
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
 
-    for (let i = 0; i < starCount; i++) {
-      const radius = 10 + Math.random() * 65;
-      const u = Math.random();
-      const v = Math.random();
-      const theta = u * 2.0 * Math.PI;
-      const phi = Math.acos(2.0 * v - 1.0);
-      
-      starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.6; // Un poco aplanado
-      starPositions[i * 3 + 2] = radius * Math.cos(phi);
+        const colorInside = new THREE.Color('#ff69b4');
+        const colorOutside = new THREE.Color('#1e90ff');
+        const colorCore = new THREE.Color('#ffffff');
 
-      // Mezcla de colores aleatorios para el fondo cósmico
-      let rand = Math.random();
-      let pickedColor = cBlue.clone();
-      if (rand > 0.3 && rand < 0.7) pickedColor.lerp(cPurple, Math.random());
-      else if (rand >= 0.7) pickedColor.lerp(cGold, Math.random());
+        for (let i = 0; i < count; i++) {
+            const i3 = i * 3;
+            const radius = Math.random() * 80;
+            const spinAngle = radius * 0.5;
+            const branchAngle = ((i % 3) * Math.PI * 2) / 3;
 
-      starColors[i * 3] = pickedColor.r;
-      starColors[i * 3 + 1] = pickedColor.g;
-      starColors[i * 3 + 2] = pickedColor.b;
-    }
+            const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 10;
+            const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 10;
+            const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * 10;
 
-    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
-    const starMaterial = new THREE.PointsMaterial({
-      size: 0.08, 
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.65,
-      blending: THREE.AdditiveBlending // Efecto de luz acumulativa
-    });
-    const starField = new THREE.Points(starGeometry, starMaterial);
-    universeGroup.add(starField);
+            positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+            positions[i3 + 1] = randomY;
+            positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
 
-    // --- 2. LA GALAXIA ESPIRAL (25,000 partículas ultra densas) ---
-    const galaxyCount = 25000;
-    const galaxyGeometry = new THREE.BufferGeometry();
-    const galaxyPositions = new Float32Array(galaxyCount * 3);
-    const galaxyColors = new Float32Array(galaxyCount * 3);
+            const mixedColor = colorInside.clone();
+            mixedColor.lerp(colorOutside, radius / 80);
+            if (radius < 10) mixedColor.lerp(colorCore, 1 - radius / 10);
 
-    for (let i = 0; i < galaxyCount; i++) {
-      const r = Math.pow(Math.random(), 1.3) * 26; // Radio de expansión
-      const numBrazos = 4;
-      const brazoActual = i % numBrazos; 
-      const anguloBrazo = (brazoActual * 2 * Math.PI) / numBrazos;
-      
-      // Matemática para crear la espiral orgánica
-      const dispersion = (Math.random() - 0.5) * (6.0 / (r + 1.0));
-      const theta = anguloBrazo + (r * 0.35) + dispersion;
-      
-      galaxyPositions[i * 3] = r * Math.cos(theta);
-      galaxyPositions[i * 3 + 1] = (Math.random() - 0.5) * 4.5 * Math.exp(-r * 0.07); 
-      galaxyPositions[i * 3 + 2] = r * Math.sin(theta);
-
-      // Degradado cromático: Núcleo dorado brillante -> Morado -> Azul cósmico
-      const factor = r / 26;
-      let mixColor = cGold.clone(); 
-      if (factor > 0.05) mixColor.lerp(cPurple, (factor - 0.05) * 1.3);
-      if (factor > 0.30) mixColor.lerp(cBlue, (factor - 0.30) * 1.4);
-
-      galaxyColors[i * 3] = mixColor.r;
-      galaxyColors[i * 3 + 1] = mixColor.g;
-      galaxyColors[i * 3 + 2] = mixColor.b;
-    }
-
-    galaxyGeometry.setAttribute('position', new THREE.BufferAttribute(galaxyPositions, 3));
-    galaxyGeometry.setAttribute('color', new THREE.BufferAttribute(galaxyColors, 3));
-    
-    const galaxyMaterial = new THREE.PointsMaterial({
-      size: 0.20, // Partículas grandes para que brillen con fuerza
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.95, 
-      blending: THREE.AdditiveBlending 
-    });
-    const galaxyMesh = new THREE.Points(galaxyGeometry, galaxyMaterial);
-    universeGroup.add(galaxyMesh);
-
-    // --- 3. BANCO DE FRASES Y DISTRIBUCIÓN ESPECÍFICA (115 elementos) ---
-    // Listas para crear combinaciones románticas
-    const inicios = ["Eres mi", "Siempre", "Juntos por", "Mi rincón", "Mi pequeña", "Amor", "Luz de mi", "Mi mundo", "Mi felicidad", "Dueña de mi", "Latido de mi", "Gracias por", "Te amo"];
-    const conectores = ["universo", "princesa ??", "chaparrita ??", "infinito 8", "eterno", "2 meses juntos", "todo entero", "estrella ?", "reflejo", "destino ??", "magia ??", "vida", "cielo ??", "ilusión", "sonrisa ??", "corazón ??"];
-    const finales = ["perfecto", "favorito", "en el cosmos", "por siempre", "cada día más", "sin final", "completo", "brillante ??", "alegría", "única", "hermosa", "mi suerte"];
-
-    // Base de frases estáticas principales
-    const frasesBase = [
-      "TE AMO", "MI PRINCESA ??", "MI CHAPARRITA ??", "INFINITO 8", "2 MESES JUNTOS", 
-      "ERES MI TODO", "NUESTRO UNIVERSO ??", "SIEMPRE JUNTOS", "MI MUNDO ??", "AMOR ETERNO",
-      "SONRISAS ??", "RECUERDOS ??", "FELICIDAD", "SUEÑOS ?", "MI LUZ ??", "MAGIA ??",
-      "DESTINO ??", "CARIÑO", "ILUSIÓN", "PASIÓN ??", "COMPLICES", "MI REFLEJO"
-    ];
-
-    // Generamos las frases únicas combinando las listas
-    const bancoDeFrases = [...frasesBase];
-    while (bancoDeFrases.length < 115) {
-      const randomInicio = inicios[Math.floor(Math.random() * inicios.length)];
-      const randomConector = conectores[Math.floor(Math.random() * conectores.length)];
-      const randomFinal = finales[Math.floor(Math.random() * finales.length)];
-      
-      let fraseGenerada = Math.random() > 0.5 ? `${randomInicio} ${randomConector}` : `${randomConector} ${randomFinal}`;
-      
-      if (!bancoDeFrases.includes(fraseGenerada)) {
-        bancoDeFrases.push(fraseGenerada);
-      }
-    }
-
-    // Creamos los elementos HTML y asignamos su posición 3D dispersa
-    const labelsData = [];
-    const totalVisibles = 115; // Total exacto
-    const frasesEnGalaxia = 15; // Las que quedan "dentro"
-    const frasesEnEspacio = 100; // Las que llenan los bordes y vacíos
-
-    for (let i = 0; i < totalVisibles; i++) {
-      const el = document.createElement('div');
-      el.className = 'palabra-galactica';
-      el.textContent = bancoDeFrases[i % bancoDeFrases.length];
-      labelsContainer.appendChild(el);
-
-      let radius, theta, yPos;
-      
-      if (i < frasesEnGalaxia) {
-        // 1. Las 15 dentro de la galaxia central
-        radius = 5 + Math.random() * 19; 
-        theta = (i * (Math.PI * 2 / frasesEnGalaxia)) + (Math.random() - 0.5) * 0.5;
-        yPos = (Math.random() - 0.5) * 2.5; // Integradas al disco
-      } else {
-        // 2. Las 100 en los espacios negros y bordes exteriores
-        radius = 27 + Math.random() * 28; 
-        const indexDisperso = i - frasesEnGalaxia;
-        // Distribución uniforme para que no se encimen
-        theta = (indexDisperso * (Math.PI * 2 / frasesEnEspacio)) + (Math.random() - 0.5) * 0.4;
-        
-        // Estratificación de altura (Y) para rellenar los vacíos tridimensionales superiores e inferiores
-        const totalRows = 10;
-        const currentRow = Math.floor(indexDisperso / (frasesEnEspacio / totalRows));
-        yPos = ((currentRow / totalRows) * 2 - 1) * 14 + (Math.random() - 0.5) * 2;
-      }
-
-      const pos3D = new THREE.Vector3(
-        radius * Math.cos(theta),
-        yPos,
-        radius * Math.sin(theta)
-      );
-
-      labelsData.push({ element: el, pos3D: pos3D });
-    }
-
-    // --- 4. LÓGICA DE INTERACCIÓN (Swipe táctil y Mouse con Inercia) ---
-    let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-    let rotationVelocityX = 0;
-    let rotationVelocityY = 0;
-    const friction = 0.96; // Factor de frenado para la inercia
-    let startTouchDistance = 0;
-
-    // Zoom interactivo con Rueda del Ratón
-    window.addEventListener('wheel', (e) => {
-      targetCameraDistance += e.deltaY * 0.03;
-      // Limitar rango de zoom
-      targetCameraDistance = Math.max(minDistance, Math.min(maxDistance, targetCameraDistance));
-    }, { passive: true });
-
-    // Manejo del inicio, movimiento y fin del toque/clic
-    function onPointerDown(e) {
-      if (e.touches && e.touches.length === 2) {
-        // Pellizco para zoom (Dos dedos)
-        isDragging = false;
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        startTouchDistance = Math.sqrt(dx * dx + dy * dy);
-      } else {
-        // Rotación normal (Un dedo / mouse)
-        isDragging = true;
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        previousMousePosition = { x: clientX, y: clientY };
-      }
-    }
-
-    function onPointerMove(e) {
-      // Zoom táctil (Pinch-to-zoom)
-      if (e.touches && e.touches.length === 2) {
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        const currentDistance = Math.sqrt(dx * dx + dy * dy);
-        
-        const deltaDistance = startTouchDistance - currentDistance;
-        targetCameraDistance += deltaDistance * 0.08;
-        targetCameraDistance = Math.max(minDistance, Math.min(maxDistance, targetCameraDistance));
-        
-        startTouchDistance = currentDistance;
-        return; // No rotar mientras se hace zoom
-      }
-
-      // Rotación
-      if (!isDragging) return;
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-      const deltaX = clientX - previousMousePosition.x;
-      const deltaY = clientY - previousMousePosition.y;
-
-      // Calculamos velocidad de rotación según el movimiento
-      rotationVelocityY = deltaX * 0.003;
-      rotationVelocityX = deltaY * 0.0015;
-
-      previousMousePosition = { x: clientX, y: clientY };
-    }
-
-    function onPointerUp() { isDragging = false; }
-
-    // Event listeners para ratón y eventos táctiles
-    window.addEventListener('mousedown', onPointerDown);
-    window.addEventListener('mousemove', onPointerMove);
-    window.addEventListener('mouseup', onPointerUp);
-    window.addEventListener('touchstart', onPointerDown, { passive: true });
-    window.addEventListener('touchmove', onPointerMove, { passive: true });
-    window.addEventListener('touchend', onPointerUp);
-
-    // --- 5. BUCLE DE ANIMACIÓN PRINCIPAL (Renderizado continuo) ---
-    function animate() {
-      requestAnimationFrame(animate);
-
-      // Interpolación suave (Lerp) para que el zoom sea fluido
-      currentCameraDistance += (targetCameraDistance - currentCameraDistance) * 0.08;
-      
-      // Actualizamos posición de cámara y ángulo según el zoom
-      camera.position.set(0, currentCameraDistance * 0.70, currentCameraDistance * 1.0);
-      camera.lookAt(0, -1, 0);
-
-      // Aplicamos la rotación (arrastre o rotación automática)
-      if (isDragging) {
-        universeGroup.rotation.y += rotationVelocityY;
-        universeGroup.rotation.x += rotationVelocityX;
-      } else {
-        universeGroup.rotation.y += 0.0006; // Rotación automática base
-        // Aplicamos inercia
-        universeGroup.rotation.y += rotationVelocityY;
-        universeGroup.rotation.x += rotationVelocityX;
-        // Frenado suave
-        rotationVelocityY *= friction;
-        rotationVelocityX *= friction;
-      }
-
-      // Limitamos inclinación vertical
-      universeGroup.rotation.x = Math.max(-0.4, Math.min(0.4, universeGroup.rotation.x));
-
-      // Obtenemos mitad de pantalla actual para posicionamiento de etiquetas
-      const widthHalf = window.innerWidth / 2;
-      const heightHalf = window.innerHeight / 2;
-
-      // Actualizamos posición 2D de las palabras basándonos en su posición 3D
-      labelsData.forEach(label => {
-        // Clonamos posición y aplicamos rotación del grupo
-        const wp = label.pos3D.clone().applyMatrix4(universeGroup.matrixWorld);
-        // Proyectamos a coordenadas de pantalla (-1 a 1)
-        const tempV = wp.clone().project(camera);
-        
-        // Si está fuera de la vista o detrás de la cámara, la ocultamos
-        if (tempV.z > 1 || tempV.x < -1 || tempV.x > 1 || tempV.y < -1 || tempV.y > 1) {
-          label.element.style.opacity = 0;
-          return;
+            colors[i3] = mixedColor.r;
+            colors[i3 + 1] = mixedColor.g;
+            colors[i3 + 2] = mixedColor.b;
         }
 
-        // Convertimos coordenadas proyectadas a píxeles
-        const x = (tempV.x * widthHalf) + widthHalf;
-        const y = (-(tempV.y * heightHalf) + heightHalf);
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-        // Efecto de profundidad: más opaco/grande al frente, tenue/pequeño al fondo
-        const depthOpacity = (1.25 - tempV.z).toFixed(2);
-        // Escala inteligente que responde tanto a la posición 3D como al Zoom
-        const scaleFactor = ((1.15 - tempV.z * 0.45) * (45 / currentCameraDistance)).toFixed(2);
+        const canvasCanvas = document.createElement('canvas');
+        canvasCanvas.width = 16;
+        canvasCanvas.height = 16;
+        const ctx = canvasCanvas.getContext('2d');
+        const gradient = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+        gradient.addColorStop(0, 'rgba(255,255,255,1)');
+        gradient.addColorStop(0.5, 'rgba(255,180,220,0.5)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 16, 16);
 
-        // Aplicamos estilos finales ultra legibles
-        label.element.style.opacity = Math.max(0.35, Math.min(depthOpacity, 1));
-        label.element.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(${scaleFactor})`;
-      });
+        const particleTexture = new THREE.CanvasTexture(canvasCanvas);
+        const material = new THREE.PointsMaterial({
+            size: 0.8,
+            sizeAttenuation: true,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            depthWrite: false,
+            map: particleTexture
+        });
 
-      // Renderizamos la escena 3D
-      renderer.render(scene, camera);
-    }
+        const galaxy = new THREE.Points(geometry, material);
+        scene.add(galaxy);
 
-    // Iniciamos el bucle
-    animate();
+        const labels = [];
+        const uiLayer = document.getElementById('ui-layer');
 
-    // AJUSTE CLAVE: Lógica de redimensionado de ventana automática
-    window.addEventListener('resize', () => {
-      // Actualizamos cámara (aspect ratio) y renderer al nuevo tamaño
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  </script>
+        for (let i = 0; i < phrases.length; i++) {
+            const div = document.createElement('div');
+            div.className = 'galaxy-label' + (i < 4 ? ' highlight' : '');
+            div.textContent = phrases[i];
+            uiLayer.appendChild(div);
+
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 5 + Math.random() * 55;
+            const x = Math.cos(angle) * radius;
+            const z = Math.sin(angle) * radius;
+            const y = (Math.random() - 0.5) * 8;
+
+            labels.push({ element: div, position: new THREE.Vector3(x, y, z) });
+        }
+
+        const tempV = new THREE.Vector3();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            galaxy.rotation.y += 0.0008;
+
+            const cameraDistance = camera.position.distanceTo(scene.position);
+
+            labels.forEach(label => {
+                tempV.copy(label.position);
+                tempV.applyMatrix4(galaxy.matrixWorld);
+
+                const cloneV = tempV.clone();
+                cloneV.project(camera);
+
+                if (cloneV.z > 1 || cloneV.x < -1 || cloneV.x > 1 || cloneV.y < -1 || cloneV.y > 1) {
+                    label.element.style.display = 'none';
+                    return;
+                }
+
+                label.element.style.display = 'block';
+                const x = (cloneV.x *  .5 + .5) * window.innerWidth;
+                const y = (cloneV.y * -.5 + .5) * window.innerHeight;
+
+                label.element.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+                
+                const depthOpacity = Math.max(0.1, 1 - (tempV.distanceTo(camera.position) / 120));
+                label.element.style.opacity = Math.max(0.2, Math.min(depthOpacity, 1));
+            });
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
 </body>
-</html>
+</html>   
