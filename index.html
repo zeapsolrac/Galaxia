@@ -137,21 +137,21 @@
     const cGold = new THREE.Color(0xffd60a);
     const cPurple = new THREE.Color(0xbf5af2);
 
-    // --- 1. ESTRELLAS DE FONDO LEJANO (25,000 partículas para llenar el espacio) ---
-    const starCount = 25000; 
+    // --- 1. ESTRELLAS DE FONDO LEJANO (Aumentado masivamente a 70,000 partículas para rellenar todo el cosmos sin vacíos) ---
+    const starCount = 70000; 
     const starGeometry = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
 
     for (let i = 0; i < starCount; i++) {
-      const radius = 10 + Math.random() * 65;
+      const radius = 5 + Math.random() * 120; // Rango más amplio para cubrir toda la profundidad y bordes
       const u = Math.random();
       const v = Math.random();
       const theta = u * 2.0 * Math.PI;
       const phi = Math.acos(2.0 * v - 1.0);
       
       starPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-      starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.6; // Un poco aplanado
+      starPositions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta) * 0.7; 
       starPositions[i * 3 + 2] = radius * Math.cos(phi);
 
       // Mezcla de colores aleatorios para el fondo cósmico
@@ -168,10 +168,10 @@
     starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
     starGeometry.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
     const starMaterial = new THREE.PointsMaterial({
-      size: 0.08, 
+      size: 0.12, // Ligeramente más visibles para llenar los espacios negros
       vertexColors: true,
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.85,
       blending: THREE.AdditiveBlending // Efecto de luz acumulativa
     });
     const starField = new THREE.Points(starGeometry, starMaterial);
