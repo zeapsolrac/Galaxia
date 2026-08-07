@@ -12,21 +12,47 @@
             height: 100vh;
             overflow: hidden;
             background-color: #010103;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
             user-select: none;
         }
-        #canvas-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
-        #ui-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; display: flex; flex-direction: column;
-            justify-content: flex-start; align-items: center;
-            box-sizing: border-box; padding: 3vh 2vw; z-index: 10;
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: block;
         }
-        .header-title { text-align: center; margin-top: 1vh; pointer-events: auto; }
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 3vh 2vw;
+            z-index: 10;
+        }
+        .header-title {
+            text-align: center;
+            margin-top: 1vh;
+            pointer-events: auto;
+        }
         .header-title h1 {
-            color: #ffb7c5; font-size: clamp(1.4rem, 3.5vw, 2.5rem); font-weight: 800; margin: 0;
-            text-transform: uppercase; letter-spacing: 2px; white-space: nowrap;
-            text-shadow: 0 0 15px rgba(255, 183, 197, 0.6);
+            color: #ffb7c5;
+            font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            white-space: nowrap;
+            text-shadow: 0 0 15px rgba(255, 183, 197, 0.6), 0 0 30px rgba(255, 105, 180, 0.4);
             animation: pulseGlow 3s ease-in-out infinite alternate;
         }
         @keyframes pulseGlow {
@@ -34,64 +60,159 @@
             100% { text-shadow: 0 0 25px rgba(255,105,180,0.9); transform: scale(1.02); }
         }
         .galaxy-label {
-            position: absolute; color: rgba(255, 255, 255, 0.85); font-size: clamp(9px, 1.1vw, 12px);
-            padding: 3px 6px; border-radius: 4px; pointer-events: none; white-space: nowrap;
-            transition: opacity 0.3s ease; text-shadow: 0 0 4px rgba(0,0,0,0.9);
-            background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: clamp(9px, 1.1vw, 12px);
+            font-weight: 500;
+            padding: 3px 6px;
+            border-radius: 4px;
+            pointer-events: none;
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+            text-shadow: 0 0 4px rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
+    <!-- Three.js y dependencias de animación -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
+
     <div id="ui-layer">
         <div class="header-title">
             <h1>Felices dos meses 💖</h1>
         </div>
     </div>
+
     <div id="canvas-container"></div>
+
     <script>
         const phrases = [
-            "Felices dos meses amor de mi vida entera 💖", "Te amo con toda el alma mi princesa hermosa 🥺", "Eres mi universo entero y mi casualidad favorita 💫", "Contigo hasta el fin del cosmos mi consentida 🪐",
-            "Mis ojitos lindos, gracias por existir en mi mundo ✨", "Mi chaparrita hermosa, eres la luz de mis días 💖", "Cada momento a tu lado es completamente mágico 🥺", "Mi lugar favorito en todo el universo es estar contigo 💫",
-            "Eres arte puro y mi más grande inspiración 🪐", "Te amo hoy, mañana y para siempre mi vida 💖", "Mi persona favorita en todo el vasto universo 💖", "Iluminas todo mi espacio con tu hermosa sonrisa 🥺",
-            "Eres mi paz en medio de cualquier locura 💫", "Contigo el tiempo vuela y cada segundo es perfecto 🪐", "Gracias por regalarme tanta felicidad mi amor ✨", "Eres mi sueño hecho realidad y mi mayor bendición 💖",
-            "Dueña absoluta de todo mi corazón y mis te amos 🥺", "Tus ojitos lindos son dos galaxias donde me pierdo 💫", "A tu lado todo es mejor y tiene sentido 🪐", "Mi compañera de aventuras y mi mayor alegría ✨",
-            "Eres perfecta para mí en todos los sentidos 💖", "Te amo mucho más de lo que las palabras pueden explicar 🥺", "Mi dulce niña, mi princesa y mi todo 💫", "Juntos por siempre explorando este hermoso universo 🪐",
-            "Eres la estrella más brillante de mi firmamento ✨", "Mi razón principal para sonreír cada mañana 💖", "Haces que mi corazón lata con muchísima fuerza 🥺", "Eres mi universo entero y mi gran refugio 💫",
-            "Te amo con locura y devoción mi chaparrita 🪐", "Mi gran amor, mi paz y mi destino favorito ✨", "Eres única y completamente insustituible 💖", "Amo tus besos y cada caricia que me das 🥺",
-            "Eres mi dulce refugio cuando más lo necesito 💫", "Contigo todo tiene un propósito maravilloso 🪐", "Mi pedacito de cielo, te adoro con el alma ✨", "Eres mi mayor ilusión y mi alegría constante 💖",
-            "Te amo infinitamente mi consentida hermosa 🥺", "Mi amor bonito, gracias por estos dos meses 💫", "Eres mi sol en los días más grises y fríos 🪐", "Mi alegría constante y mi refugio seguro ✨",
-            "Eres mi más grande orgullo y mi felicidad 💖", "Te amo sin medidas ni condiciones mi vida 🥺", "Mi dulce paz en medio de cualquier tormenta 💫", "Eres mi destino favorito y mi gran fortuna 🪐",
-            "Mi tesoro más preciado en todo el cosmos ✨", "Contigo soy inmensamente feliz cada día 💖", "Eres mi gran fortuna y mi dulce compañía 🥺", "Te amo con locura y pasión infinita 💫",
-            "Mi amor eterno, mi princesa y mi dueña 🪐", "Eres mi más lindo pensamiento al despertar ✨", "Mi dulce compañía y mi razón de ser 💖", "Eres mi refugio seguro ante el mundo 🥺",
-            "Te amo por siempre y para siempre mi amor 💫", "Mi dulce inspiración para seguir adelante 🪐", "Eres mi magia diaria y mi mayor ilusión ✨", "Mi dulce latido, te amo con toda el alma 💖",
-            "Eres mi gran verdad y mi más lindo sueño 🥺", "Te amo mi vida, eres mi princesa hermosa 💫", "Mi dulce lucero que guía mis pasos 🪐", "Eres mi todo absoluto y mi gran tesoro ✨",
-            "Mi dulce encanto, te amo con locura 💖", "Eres mi gran fortuna y mi alegría diaria 🥺", "Te amo tanto que no cabe en el pecho 💫", "Mi dulce anhelo hecho realidad 🪐",
-            "Eres mi dicha más grande y mi paz ✨", "Mi dulce ilusión, mi princesa consentida 💖", "Eres mi gran bendición de todos los días 🥺", "Te amo con fervor y con el corazón en la mano 💫",
-            "Mi dulce destino es estar siempre a tu lado 🪐", "Eres mi mejor regalo de la vida entera ✨", "Mi dulce alegría, mi chaparrita hermosa 💖", "Eres mi gran motor para ser mejor cada día 🥺",
-            "Te amo sin fin y sin reservas mi amor 💫", "Mi dulce paz, mi refugio y mi hogar 🪐", "Eres mi gran refugio y mi lugar seguro ✨", "Mi dulce amor, te amo con todas mis fuerzas 💖",
-            "Eres mi gran fortuna y mi orgullo 🥺", "Te amo con una fuerza indomable mi vida 💫", "Mi dulce sueño hecho realidad a tu lado 🪐", "Eres mi gran verdad y mi luz constante ✨",
-            "Mi dulce magia, te adoro mi princesa 💖", "Eres mi gran dicha y mi más lindo motivo 🥺", "Te amo por mil razones y mil vidas más 💫", "Mi dulce anhelo, mi compañera de vida 🪐",
-            "Eres mi gran tesoro y mi persona favorita ✨", "Mi dulce lucero, mis ojitos lindos hermosos 💖", "Eres mi gran bendición y mi gran orgullo 🥺", "Te amo de verdad con el alma entera 💫",
-            "Mi dulce destino, contigo lo tengo todo 🪐", "Eres mi gran regalo y mi mayor fortuna ✨", "Mi dulce ilusión, mi consentida hermosa 💖", "Eres mi gran motor y mi dulce sonrisa 🥺",
-            "Te amo con pasión y ternura infinita 💫", "Mi dulce paz, mi amor y mi princesa 🪐", "Eres mi gran refugio y mi gran verdad ✨", "Mi dulce amor, te amo mi chaparrita 💖",
-            "Eres mi universo entero, mi vida y mi todo 🥺", "Te amo mi princesa, eres mi felicidad 💫"
+            "Felices dos meses amor de mi vida entera 💖",
+            "Te amo con toda el alma mi princesa hermosa 🥺",
+            "Eres mi universo entero y mi casualidad favorita 💫",
+            "Contigo hasta el fin del cosmos mi consentida 🪐",
+            "Mis ojitos lindos, gracias por existir en mi mundo ✨",
+            "Mi chaparrita hermosa, eres la luz de mis días 💖",
+            "Cada momento a tu lado es completamente mágico 🥺",
+            "Mi lugar favorito en todo el universo es estar contigo 💫",
+            "Eres arte puro y mi más grande inspiración 🪐",
+            "Te amo hoy, mañana y para siempre mi vida 💖",
+            "Mi persona favorita en todo el vasto universo 💖",
+            "Iluminas todo mi espacio con tu hermosa sonrisa 🥺",
+            "Eres mi paz en medio de cualquier locura 💫",
+            "Contigo el tiempo vuela y cada segundo es perfecto 🪐",
+            "Gracias por regalarme tanta felicidad mi amor ✨",
+            "Eres mi sueño hecho realidad y mi mayor bendición 💖",
+            "Dueña absoluta de todo mi corazón y mis te amos 🥺",
+            "Tus ojitos lindos son dos galaxias donde me pierdo 💫",
+            "A tu lado todo es mejor y tiene sentido 🪐",
+            "Mi compañera de aventuras y mi mayor alegría ✨",
+            "Eres perfecta para mí en todos los sentidos 💖",
+            "Te amo mucho más de lo que las palabras pueden explicar 🥺",
+            "Mi dulce niña, mi princesa y mi todo 💫",
+            "Juntos por siempre explorando este hermoso universo 🪐",
+            "Eres la estrella más brillante de mi firmamento ✨",
+            "Mi razón principal para sonreír cada mañana 💖",
+            "Haces que mi corazón lata con muchísima fuerza 🥺",
+            "Eres mi universo entero y mi gran refugio 💫",
+            "Te amo con locura y devoción mi chaparrita 🪐",
+            "Mi gran amor, mi paz y mi destino favorito ✨",
+            "Eres única y completamente insustituible 💖",
+            "Amo tus besos y cada caricia que me das 🥺",
+            "Eres mi dulce refugio cuando más lo necesito 💫",
+            "Contigo todo tiene un propósito maravilloso 🪐",
+            "Mi pedacito de cielo, te adoro con el alma ✨",
+            "Eres mi mayor ilusión y mi alegría constante 💖",
+            "Te amo infinitamente mi consentida hermosa 🥺",
+            "Mi amor bonito, gracias por estos dos meses 💫",
+            "Eres mi sol en los días más grises y fríos 🪐",
+            "Mi alegría constante y mi refugio seguro ✨",
+            "Eres mi más grande orgullo y mi felicidad 💖",
+            "Te amo sin medidas ni condiciones mi vida 🥺",
+            "Mi dulce paz en medio de cualquier tormenta 💫",
+            "Eres mi destino favorito y mi gran fortuna 🪐",
+            "Mi tesoro más preciado en todo el cosmos ✨",
+            "Contigo soy inmensamente feliz cada día 💖",
+            "Eres mi gran fortuna y mi dulce compañía 🥺",
+            "Te amo con locura y pasión infinita 💫",
+            "Mi amor eterno, mi princesa y mi dueña 🪐",
+            "Eres mi más lindo pensamiento al despertar ✨",
+            "Mi dulce compañía y mi razón de ser 💖",
+            "Eres mi refugio seguro ante el mundo 🥺",
+            "Te amo por siempre y para siempre mi amor 💫",
+            "Mi dulce inspiración para seguir adelante 🪐",
+            "Eres mi magia diaria y mi mayor ilusión ✨",
+            "Mi dulce latido, te amo con toda el alma 💖",
+            "Eres mi gran verdad y mi más lindo sueño 🥺",
+            "Te amo mi vida, eres mi princesa hermosa 💫",
+            "Mi dulce lucero que guía mis pasos 🪐",
+            "Eres mi todo absoluto y mi gran tesoro ✨",
+            "Mi dulce encanto, te amo con locura 💖",
+            "Eres mi gran fortuna y mi alegría diaria 🥺",
+            "Te amo tanto que no cabe en el pecho 💫",
+            "Mi dulce anhelo hecho realidad 🪐",
+            "Eres mi dicha más grande y mi paz ✨",
+            "Mi dulce ilusión, mi princesa consentida 💖",
+            "Eres mi gran bendición de todos los días 🥺",
+            "Te amo con fervor y con el corazón en la mano 💫",
+            "Mi dulce destino es estar siempre a tu lado 🪐",
+            "Eres mi mejor regalo de la vida entera ✨",
+            "Mi dulce alegría, mi chaparrita hermosa 💖",
+            "Eres mi gran motor para ser mejor cada día 🥺",
+            "Te amo sin fin y sin reservas mi amor 💫",
+            "Mi dulce paz, mi refugio y mi hogar 🪐",
+            "Eres mi gran refugio y mi lugar seguro ✨",
+            "Mi dulce amor, te amo con todas mis fuerzas 💖",
+            "Eres mi gran fortuna y mi orgullo 🥺",
+            "Te amo con una fuerza indomable mi vida 💫",
+            "Mi dulce sueño hecho realidad a tu lado 🪐",
+            "Eres mi gran verdad y mi luz constante ✨",
+            "Mi dulce magia, te adoro mi princesa 💖",
+            "Eres mi gran dicha y mi más lindo motivo 🥺",
+            "Te amo por mil razones y mil vidas más 💫",
+            "Mi dulce anhelo, mi compañera de vida 🪐",
+            "Eres mi gran tesoro y mi persona favorita ✨",
+            "Mi dulce lucero, mis ojitos lindos hermosos 💖",
+            "Eres mi gran bendición y mi gran orgullo 🥺",
+            "Te amo de verdad con el alma entera 💫",
+            "Mi dulce destino, contigo lo tengo todo 🪐",
+            "Eres mi gran regalo y mi mayor fortuna ✨",
+            "Mi dulce ilusión, mi consentida hermosa 💖",
+            "Eres mi gran motor y mi dulce sonrisa 🥺",
+            "Te amo con pasión y ternura infinita 💫",
+            "Mi dulce paz, mi amor y mi princesa 🪐",
+            "Eres mi gran refugio y mi gran verdad ✨",
+            "Mi dulce amor, te amo mi chaparrita 💖",
+            "Eres mi universo entero, mi vida y mi todo 🥺",
+            "Te amo mi princesa, eres mi felicidad 💫"
         ];
 
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+        scene.fog = new THREE.FogExp2(0x010103, 0.002);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.set(0, 45, 60);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
+
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxDistance = 300;
+        controls.minDistance = 5;
+
         const count = 120000;
         const geometry = new THREE.BufferGeometry();
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
+
         const colorInside = new THREE.Color('#ff69b4');
         const colorOutside = new THREE.Color('#1e90ff');
 
@@ -100,41 +221,79 @@
             const radius = Math.random() * 90;
             const spinAngle = radius * 0.35;
             const branchAngle = ((i % 2) * Math.PI * 2) / 2;
-            positions[i3] = Math.cos(branchAngle + spinAngle) * radius + (Math.random()-0.5)*20;
-            positions[i3+1] = (Math.random()-0.5)*5;
-            positions[i3+2] = Math.sin(branchAngle + spinAngle) * radius + (Math.random()-0.5)*20;
+
+            positions[i3] = Math.cos(branchAngle + spinAngle) * radius + (Math.random() - 0.5) * 20;
+            positions[i3 + 1] = (Math.random() - 0.5) * 5;
+            positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + (Math.random() - 0.5) * 20;
+
             const mixedColor = colorInside.clone().lerp(colorOutside, radius / 90);
-            colors[i3] = mixedColor.r; colors[i3+1] = mixedColor.g; colors[i3+2] = mixedColor.b;
+            colors[i3] = mixedColor.r;
+            colors[i3 + 1] = mixedColor.g;
+            colors[i3 + 2] = mixedColor.b;
         }
+
         geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        const material = new THREE.PointsMaterial({ size: 0.7, vertexColors: true, blending: THREE.AdditiveBlending, transparent: true });
+
+        const material = new THREE.PointsMaterial({
+            size: 0.7,
+            sizeAttenuation: true,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            depthWrite: false
+        });
+
         const galaxy = new THREE.Points(geometry, material);
         scene.add(galaxy);
 
         const labels = [];
         const uiLayer = document.getElementById('ui-layer');
+
         phrases.forEach(p => {
             const div = document.createElement('div');
             div.className = 'galaxy-label';
             div.textContent = p;
             uiLayer.appendChild(div);
+
             const angle = Math.random() * Math.PI * 2;
             const radius = 10 + Math.random() * 60;
-            labels.push({ element: div, position: new THREE.Vector3(Math.cos(angle)*radius, (Math.random()-0.5)*5, Math.sin(angle)*radius) });
+            const x = Math.cos(angle) * radius;
+            const z = Math.sin(angle) * radius;
+            const y = (Math.random() - 0.5) * 5;
+
+            labels.push({ element: div, position: new THREE.Vector3(x, y, z) });
         });
+
+        const tempV = new THREE.Vector3();
 
         function animate() {
             requestAnimationFrame(animate);
             galaxy.rotation.y += 0.0006;
+
             labels.forEach(l => {
-                const pos = l.position.clone().applyMatrix4(galaxy.matrixWorld).project(camera);
-                if (pos.z > 1) { l.element.style.display = 'none'; return; }
+                tempV.copy(l.position);
+                tempV.applyMatrix4(galaxy.matrixWorld);
+
+                const cloneV = tempV.clone();
+                cloneV.project(camera);
+
+                if (cloneV.z > 1 || cloneV.x < -1 || cloneV.x > 1 || cloneV.y < -1 || cloneV.y > 1) {
+                    l.element.style.display = 'none';
+                    return;
+                }
+
                 l.element.style.display = 'block';
-                l.element.style.transform = `translate(-50%, -50%) translate(${(pos.x*.5+.5)*window.innerWidth}px, ${(pos.y*-.5+.5)*window.innerHeight}px)`;
+                const x = (cloneV.x *  .5 + .5) * window.innerWidth;
+                const y = (cloneV.y * -.5 + .5) * window.innerHeight;
+
+                l.element.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
             });
+
+            controls.update();
             renderer.render(scene, camera);
         }
+
         animate();
 
         window.addEventListener('resize', () => {
